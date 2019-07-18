@@ -150,7 +150,7 @@ Keep *the axes of the vehicle frame* instead of using principal axes of the poin
 
 Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v)*)
 
-    -> Most of the planar areas are aligned to *(X_v, Y_v, Z_v)*
+   -> Most of the planar areas are aligned to *(X_v, Y_v, Z_v)*
     
 * **Process**
 
