@@ -6,7 +6,7 @@ MINES ParisTech, PSL Research University, Centre for Robotics, 60 Bd St Michel 7
 <br/>
 <br/>
 
-**keywords**: localization, SLAM
+**keywords**: localization, mapping, SLAM
 <br/>
 <br/>
 
@@ -172,6 +172,10 @@ Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v
 
 <br/>
 
+![nine_values](https://user-images.githubusercontent.com/42059549/61431454-808e1980-a968-11e9-8670-9ee8288edde5.JPG)
+
+<br/>
+
 3. Sort the nine lists in descending order: first points of every list = more observability related to the unknown parameters.
 
 <br/>
@@ -181,6 +185,10 @@ Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v
 <br/>
 
 5. Find *the closest point* *p_c* of *x* in the model cloud until we find *s* samples from each list.
+
+<br/>
+
+![fig2](https://user-images.githubusercontent.com/42059549/61431494-a0254200-a968-11e9-9085-78950431212b.JPG)
 
 <br/>
     
@@ -203,6 +211,11 @@ Performance of results: "scan-to-model matching" > "classical scan-to-scan match
 2. Define *IMLS surface* *I(x)*: *behaves as a distance function* close to the surface.
 
     -> Weights *W_i(x)*: *decreases* quickly when points are far from *x*.
+
+<br/>
+
+![equation1](https://user-images.githubusercontent.com/42059549/61431552-cb0f9600-a968-11e9-94d5-30f88465824a.JPG)
+
 <br/>
 
 3. Define our point cloud map *P_k* as the accumulation of *n* previous localized scans.
@@ -239,11 +252,15 @@ Performance of results: "scan-to-model matching" > "classical scan-to-scan match
 
 10. Compute *linear interpolation* of vehicle position between *τ(t_k-1)* and *τ(t_k)*.
 
+<br/>
+
+![fig3](https://user-images.githubusercontent.com/42059549/61431602-f72b1700-a968-11e9-8255-840df6128886.JPG)
+
 ***
 
 <br/>
 
-## Experiments and Result
+## Experiments and Results
 
 <br/>
 
@@ -275,4 +292,36 @@ Performance of results: "scan-to-model matching" > "classical scan-to-scan match
 
 ### Results
 
-The paper measures *the distance* between first and last localized scan as an error metric.
+The paper measures *the distance* between the first and last localized scan as an error metric.
+
+<br/>
+
+* **Comparison with IMLS-SLAM and ICP**
+
+<br/>
+
+![fig1](https://user-images.githubusercontent.com/42059549/61431317-08275880-a968-11e9-8ddb-37e1b2761167.JPG)
+
+Fig1: The good superposition of the two loops with IMLS-SLAM
+
+<br/>
+
+* **Small portion of the point cloud generated from the SLAM**
+
+<br/>
+
+![fig4](https://user-images.githubusercontent.com/42059549/61432122-635a4a80-a96a-11e9-8798-c0bbaff9aa4d.JPG)
+
+Fig4: Good egomotion of the vehicle during each scan
+
+The distance error between the first and last scan with IMLS SLAM: 16 m (a drift of only 0.40%)
+
+<br/>
+
+* **Comparision with IMLS-SLAM and LOAM in the KITTI dataset**
+
+<br/>
+
+![table1](https://user-images.githubusercontent.com/42059549/61432227-ae745d80-a96a-11e9-860a-484f73b65026.JPG)
+
+Table1: IMLS-SLAM has better performance than LOAM 
