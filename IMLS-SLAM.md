@@ -48,7 +48,23 @@ The method relies on **a scan-to-model matching framework**.
 
 * 6-DOF SLAM LiDAR with mapping
 
-1. ICP(Interative Closest Point): a well-known scan-to-scan registration method
+1. ICP(Interative Closest Point): 
+
+        a well-known scan-to-scan registration or point-to-plane matching method
+    
+2. Stop-scan-go strategy
+
+3. Build a vexel grid using a continuous spinning 2D laser
+
+4. De-skew the range image along the trajectory considering spinning effect of 3D LiDAR
+
+5. 3D LiDAR: sparse voxelized representation & generalization of ICP
+
+6. LOAM(LiDAR Odometry And Mapping):
+
+        focus on edges and planar features in the 2D LiDAR sweep
+    
+        match in a map for edge-line and planar-planar surfcae matching
 
 
 
