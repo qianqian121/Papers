@@ -156,8 +156,6 @@ Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v
 
 * **Process**
 
-<br/>
-
 1. Compute *the normal* at every point
 
     -> For every point, keep the planar scalar(*a_2D*) of its neighborhood
@@ -253,6 +251,28 @@ Performance of results: "scan-to-model matching" > "classical scan-to-scan match
 
 * Advantage: *move* the scan converge towards the implicit surface, *improve* the quality of matching
 
+<br/>
 
+### Environment
 
+* Implemented in **C++** using only the **FLANN** library(for nearest neighbor research with k-d tree) and **Eigen**
 
+* **Velodyne HDL32, Velodyne HDL64** are used to test on a real outdoor dataset with **10 Hz**
+
+* **one CPU core** at **4 GHz**, uses **less than 1 Go of RAM**
+
+* **Sampling points** in each list: *s* = 100
+
+* *h* = 0.06 m for the IMLS surface definition
+
+* *r* = 0.20 m : maximum distance for neighbors search
+
+* **The number of matching iterataions**: 20 (keep a constant timing process)
+
+* **The number of scans we have in the model point cloud**: *n* = 100
+
+<br/>
+
+### Results
+
+The paper measures *the distance* between first and last localized scan as an error metric.
