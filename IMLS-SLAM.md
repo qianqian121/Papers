@@ -192,7 +192,7 @@ Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v
 
 <br/>
     
-### 3. Scan-To-Model Matching with Implcit Moving Least Squares (IMLS) Surface representation
+### 3. Scan-To-Model Matching with Implicit Moving Least Squares (IMLS) Surface representation
 
 Implicit surface: defined by a Truncated Signed Distance Function (TSDF) 
 
