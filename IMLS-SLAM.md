@@ -151,17 +151,107 @@ Keep *the axes of the vehicle frame* instead of using principal axes of the poin
 Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v)*)
 
    -> Most of the planar areas are aligned to *(X_v, Y_v, Z_v)*
-    
+
+<br/>
+
 * **Process**
+
+<br/>
 
 1. Compute *the normal* at every point
 
     -> For every point, keep the planar scalar(*a_2D*) of its neighborhood
-    
+
+<br/>
+
 2. Compute the *nine values* for every point *x_i* in the scan cloud *S_k*
+
+    six values: the observability of the different unknown angles(*roll, pitch, yaw*) of the vehicle 
+
+    last three values: observability of the unknown translations
 
 (*Not* mandatory in our method to have planar zones, but it *improves* the quality of matching)
 
+<br/>
+
+3. Sort the nine lists in descending order: first points of every list = more observability related to the unknown parameters.
+
+<br/>
+
+4. Select from each list starting from the beginning of the list.
+
+<br/>
+
+5. Find *the closest point* *p_c* of *x* in the model cloud until we find *s* samples from each list.
+
+<br/>
+    
+### 3. Scan-To-Model Matching with Implcit Moving Least Squares (IMLS) Surface representation
+
+Implicit surface: defined by a Truncated Signed Distance Function (TSDF) 
+
+   -> problem: the surface is defined by a voxel grid(empty, SDF, unknown), usable only in a small volume space
+
+Performance of results: "scan-to-model matching" > "classical scan-to-scan matching"
+
+<br/>
+
+* **Process**
+
+1. *MLS(Moving Least Square) surface*: generates as smooth surface from a raw noisy point cloud.
+
+<br/>
+
+2. Define *IMLS surface* *I(x)*: *behaves as a distance function* close to the surface.
+
+    -> Weights *W_i(x)*: *decreases* quickly when points are far from *x*.
+<br/>
+
+3. Define our point cloud map *P_k* as the accumulation of *n* previous localized scans.
+
+<br/>
+
+4. Localize the current scan *S_k* in point cloud *P_k*.
+
+    -> *Find the transformation* *R* and *t* that *minimizes* the sum of squared IMLS distances
+
+    -> Due to *exponential weights*, we can**not** approximate that nonlinear least-square optimization problem by *linear least-square*
+    
+<br/>
+
+5. Have a point cloud *Y_k*, the set of projected points *y_j*.
+
+<br/>
+
+6. Look for *the transformation* *R* and *t* that minimizes the sum. (*assumption*: small angle like ICP)
+ 
+<br/>
+
+7. *Iterate* until a maximum number of iterations has been made.
+
+<br/>
+
+8. Get *final transformation*: composed of the transformation *between the first and alst iteration of the scan*.
+
+<br/>
+
+9. Compute *he new point cloud* from raw data of the currenet scan
+
+<br/>
+
+10. Compute *linear interpolation* of vehicle position between *τ(t_k-1)* and *τ(t_k)*.
+
+***
+
+<br/>
+
+## Experiments and Result
+
+<br/>
+
+### Comparison of classical ICP scan matching and IMLS scan-to-model framework
+
+* Advantage: *move* the scan converge towards the implicit surface, *improve* the quality of matching
 
 
 
