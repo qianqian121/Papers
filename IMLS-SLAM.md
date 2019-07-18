@@ -146,6 +146,22 @@ The method relies on **a scan-to-model matching framework**.
     
 ### 2. Scan Sampling Strategy
 
+Keep *the axes of the vehicle frame* instead of using principal axes of the point cloud from the covariance matrix
+
+Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v)*)
+
+    -> Most of the planar areas are aligned to *(X_v, Y_v, Z_v)*
+    
+* **Process**
+
+1. Compute *the normal* at every point
+
+    -> For every point, keep the planar scalar(*a_2D*) of its neighborhood
+    
+2. Compute the *nine values* for every point *x_i* in the scan cloud *S_k*
+
+(*Not* mandatory in our method to have planar zones, but it *improves* the quality of matching)
+
 
 
 
