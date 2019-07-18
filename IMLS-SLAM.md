@@ -4,11 +4,17 @@ Author: Jean-Emmanuel Deschaud
 
 MINES ParisTech, PSL Research University, Centre for Robotics, 60 Bd St Michel 75006 Paris, France
 <br/>
+<br/>
+
+**keywords**: localization, SLAM
+<br/>
+<br/>
+
 ### Motivation
 
 In the last 10 years, 3D depth sensors such as LiDAR have proved to be very useful to perceive the environment in autonomous driving.
 
-However **few methods** exist that directly use these **3D data for odometry**.
+However, **few methods** exist that directly use these **3D data for odometry**.
 
 
 <br/>
@@ -28,3 +34,7 @@ The method relies on **a scan-to-model matching framework**.
 3. Use **the Implicit Moving Least Squares (IMLS) surface representation**.
 
 
+***
+<br/>
+
+### 1. Introduction
