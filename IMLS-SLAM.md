@@ -33,8 +33,24 @@ The method relies on **a scan-to-model matching framework**.
 
 3. Use **the Implicit Moving Least Squares (IMLS) surface representation**.
 
-
-***
 <br/>
 
-### 1. Introduction
+### Challenges
+
+* The amount of data to process
+
+* The sparse density of collected range images
+
+
+<br/>
+
+### Related work
+
+* 6-DOF SLAM LiDAR with mapping
+
+1. ICP(Interative Closest Point): a well-known scan-to-scan registration method
+
+
+
+
+
