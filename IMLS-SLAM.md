@@ -102,35 +102,35 @@ The method relies on **a scan-to-model matching framework**.
 
 1. Estimate the discrete position *˜τ(t_k)*
 
-    -> Use **only** previous odometry: *˜τ(t_k) = τ(t_k−1) ∗ τ(t_k−2)^(-1) ∗ τ(t_k−1)*
+> -> Use **only** previous odometry: *˜τ(t_k) = τ(t_k−1) ∗ τ(t_k−2)^(-1) ∗ τ(t_k−1)*
 
 <br/>
 
 2. Build the point cloud scan *S_k*
 
-    -> Use a linear interpolation of positions between *τ(t_k−1)* and *˜τ(t_k)* 
+> -> Use a linear interpolation of positions between *τ(t_k−1)* and *˜τ(t_k)* 
     
-    ***Good** egomotion approximation*: when the angular and linear velocities of the LiDAR are *smooth and continuous*.
+>> ***Good** egomotion approximation*: when the angular and linear velocities of the LiDAR are *smooth and continuous*.
 
 <br/>
 
 3. Remove all dynamic objects from the scan.
 
-    -> Requires a high level of semantic information
+> -> Requires a high level of semantic information
         
-    1. *Detect* *the ground points* in the scan using a voxel growing.
+>> 1. *Detect* *the ground points* in the scan using a voxel growing.
     
-    2. *Remove* *these ground points*.
+>> 2. *Remove* *these ground points*.
     
-    3. *Cluster* *the remaining points* with a distance to the nearest point less than 0.5 m.
+>> 3. *Cluster* *the remaining points* with a distance to the nearest point less than 0.5 m.
     
-    4. *Discard* from *the scan small group of points* instead of dynamic objects. (*small objects*: represent *pedestrians, cars, buses, or trucks*)
+>> 4. *Discard* from *the scan small group of points* instead of dynamic objects. (*small objects*: represent *pedestrians, cars, buses, or trucks*)
     
-        -> *discard all of small objects* from the scene assuming that they could be dynamic objects.
+>>> -> *discard all of small objects* from the scene assuming that they could be dynamic objects.
         
-    5. *Remove* *groups of points* whose bounding box is less than 14 m from a vehicle frame.
+>> 5. *Remove* *groups of points* whose bounding box is less than 14 m from a vehicle frame.
 
-    6. *Add back* the ground points to the scan point cloud.
+>> 6. *Add back* the ground points to the scan point cloud.
 
 <br/>
 
@@ -150,7 +150,7 @@ Keep *the axes of the vehicle frame* instead of using principal axes of the poin
 
 Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v)*)
 
-   -> Most of the planar areas are aligned to *(X_v, Y_v, Z_v)*
+> -> Most of the planar areas are aligned to *(X_v, Y_v, Z_v)*
 
 <br/>
 
@@ -158,7 +158,7 @@ Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v
 
 1. Compute *the normal* at every point
 
-    -> For every point, keep the planar scalar(*a_2D*) of its neighborhood
+> -> For every point, keep the planar scalar(*a_2D*) of its neighborhood
 
 <br/>
 
@@ -196,7 +196,7 @@ Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v
 
 Implicit surface: defined by a Truncated Signed Distance Function (TSDF) 
 
-   -> problem: the surface is defined by a voxel grid(empty, SDF, unknown), usable only in a small volume space
+> -> problem: the surface is defined by a voxel grid(empty, SDF, unknown), usable only in a small volume space
 
 Performance of results: "scan-to-model matching" > "classical scan-to-scan matching"
 
@@ -210,7 +210,7 @@ Performance of results: "scan-to-model matching" > "classical scan-to-scan match
 
 2. Define *IMLS surface* *I(x)*: *behaves as a distance function* close to the surface.
 
-    -> Weights *W_i(x)*: *decreases* quickly when points are far from *x*.
+> -> Weights *W_i(x)*: *decreases* quickly when points are far from *x*.
 
 <br/>
 
@@ -224,9 +224,9 @@ Performance of results: "scan-to-model matching" > "classical scan-to-scan match
 
 4. Localize the current scan *S_k* in point cloud *P_k*.
 
-    -> *Find the transformation* *R* and *t* that *minimizes* the sum of squared IMLS distances
+> -> *Find the transformation* *R* and *t* that *minimizes* the sum of squared IMLS distances
 
-    -> Due to *exponential weights*, we can**not** approximate that nonlinear least-square optimization problem by *linear least-square*
+> -> Due to *exponential weights*, we can**not** approximate that nonlinear least-square optimization problem by *linear least-square*
     
 <br/>
 
