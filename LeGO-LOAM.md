@@ -32,9 +32,9 @@ the Department of Mechanical Engineering,Stevens Institute of Technology, Castle
 
 ![fig1](https://user-images.githubusercontent.com/42059549/61605986-0b318a00-ac83-11e9-8b81-1efe50ced16d.png)
 
-* Input: 3D LiDAR sensor data
+* **Input**: 3D LiDAR sensor data
 
-* Output: 6DOF estimated pose
+* **Output**: 6DOF estimated pose
 
 <br/>
 <br/>
