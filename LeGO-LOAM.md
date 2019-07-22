@@ -14,7 +14,7 @@ the Department of Mechanical Engineering,Stevens Institute of Technology, Castle
 
 1. This paper propose a lightweight and ground-optimized lidar odometry and mapping method, LeGO-LOAM, for **realtime six degree-of-freedom pose estimation** with ground vehicles.
 
-2. LeGO-LOAM leverages the presence of ground plane in its segmentation and optimization steps.
+2. LeGO-LOAM leverages **the presence of ground plane** in its segmentation and optimization steps.
 
 
 <br/>
