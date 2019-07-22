@@ -2,6 +2,9 @@
 <br/>
 Author: Tixiao Shan, Brendan Englot
 
+<br/>
+<br/>
+
 the Department of Mechanical Engineering,Stevens Institute of Technology, Castle Point on Hudson, Hoboken NJ 07030 USA
 <br/>
 <br/>
@@ -30,7 +33,7 @@ the Department of Mechanical Engineering,Stevens Institute of Technology, Castle
 
 ## System overview (5 modules)
 
-![fig1](https://user-images.githubusercontent.com/42059549/61605986-0b318a00-ac83-11e9-8b81-1efe50ced16d.png)
+>>> ![fig1](https://user-images.githubusercontent.com/42059549/61605986-0b318a00-ac83-11e9-8b81-1efe50ced16d.png)
 
 * **Input**: 3D LiDAR sensor data
 
@@ -51,50 +54,70 @@ the Department of Mechanical Engineering,Stevens Institute of Technology, Castle
 
 <br/>
 
-![fig2](https://user-images.githubusercontent.com/42059549/61606726-ad9f3c80-ac86-11e9-9f9a-a1ac208affec.png)
+>>> ![fig2](https://user-images.githubusercontent.com/42059549/61606726-ad9f3c80-ac86-11e9-9f9a-a1ac208affec.png)
 
 <br/>
 
 ## vs. LOAM
 
-* Similar or better accuracy
+* **Similar or better** accuracy
 
-* Reduced computational expense
+* **Reduced** computational expense
 
-* Lightweight LiDAR odometry and mapping
+* **Lightweight** LiDAR odometry and mapping
 
 
 ***
 
 <br/>
 
-## Method
+## Lightweight LiDAR odometry and mapping
 
-### 1. Scan Egomotion and Dynamic Object Removal
-
-<br/>
-
-* **Input**
-
-    - **Scan *S***: the data coming from one rotation of the LiDAR sensor
-    
-    - **Displacement**: the movement of the vehicle during the acquisition time of a scan
-    
-        -> assumption: the egomotion is relatively similar between two consecutive scans 
+### 1. Segmentation
 
 <br/>
 
-* **Output**
+**Improve processing efficiency** and **feature extraction accuracy**
 
-    - **Actual egomotion**: computed by the previous relative displacement
-    
-    - **Discrete position (*τ(t)*)**: The position solutions for the vehicle positions
-    
-        -> any vehicle pose: computed as a _linear interpolation_ between previous and current scan *τ(t)*
-    
-    - **Transformation of the vehicle pose**: *τ(t_k)* relative to its first position (at time *t_k* for scan *k*)
+Perform **fast** and **reliable** feature extraction
+
+**Omit the clusters** that have fewer than 30 points
 
 <br/>
+<br/>
+
+
+* **Obtained Three properties for each point**
+
+1. Its label as a **ground point** or **segmented point**
+
+2. its **column and row index** in the range image
+
+3. Its **range value**
+
+<br/>
+<br/>
+
+### 2. Feature extraction
+
+**Extract** features from **ground points** and **segmented points**.
+
+<br/>
+<br/>
+
+* *S* : the set of continuous points of *p_i* from the same row of the range image
+
+(Half of the points in *S* : on either side of *p_i* )
+
+* **Evaluate** the **roughness** of point *p_i* in *S*
+
+> ![eq1](https://user-images.githubusercontent.com/42059549/61608278-0e317800-ac8d-11e9-9bd4-be95c16ceeaa.JPG)
+
+
+
+
+
+
 
 * **Process**
 
