@@ -14,41 +14,55 @@ the Department of Mechanical Engineering,Stevens Institute of Technology, Castle
 
 1. This paper propose a lightweight and ground-optimized lidar odometry and mapping method, LeGO-LOAM, for **realtime six degree-of-freedom pose estimation** with ground vehicles.
 
-2. LeGO-LOAM leverages **the presence of ground plane** in its segmentation and optimization steps.
+2. **Use the planar** and **edge features** to solve different components of 6DOF transformation across consecutive scans
 
+    1. **Planar features** extracted from the ground: to obtain [t_z, th_roll, th_pitch]
+
+    2. matching **edge features** extracted from segmented point cloud: [t_x, t_y, th_yaw]
+
+    3. **Integrate ability**: perform **loop closure** -> **correct motion estimation drift**
+
+3. LeGO-LOAM leverages **the presence of ground plane** in its segmentation and optimization steps.
+
+4. **Two-step Levenberg-Marquardt optimization method**
 
 <br/>
 
-## Challenges
+## System overview (5 modules)
 
-* The amount of data to process
+![fig1](https://user-images.githubusercontent.com/42059549/61605986-0b318a00-ac83-11e9-8b81-1efe50ced16d.png)
 
-* The sparse density of collected range images
+* Input: 3D LiDAR sensor data
 
+* Output: 6DOF estimated pose
+
+<br/>
+<br/>
+
+1. **Point cloud segmentation**: single scan’s point cloud -> project it onto a range image
+
+2. **Feature extraction**: obtain distinctive **planar** and **edge features**
+
+3. **LiDAR odometry**: use feature extracted from 2nd module -> Find **transformation** between two consecutive scans
+
+4. **LiDAR mapping**: features are processed, **register** to global point cloud map
+
+5. **Transform integration**: fuse **lidar odometry** and **lidar mapping** -> Output: final estimated pose
 
 <br/>
 
-## Related work
+![fig2](https://user-images.githubusercontent.com/42059549/61606726-ad9f3c80-ac86-11e9-9f9a-a1ac208affec.png)
 
-* 6-DOF SLAM LiDAR with mapping
+<br/>
 
-1. ICP(Interative Closest Point): 
+## vs. LOAM
 
-    a well-known scan-to-scan registration or point-to-plane matching method
-    
-2. Stop-scan-go strategy
+* Similar or better accuracy
 
-3. Build a vexel grid using a continuous spinning 2D laser
+* Reduced computational expense
 
-4. De-skew the range image along the trajectory considering spinning effect of 3D LiDAR
+* Lightweight LiDAR odometry and mapping
 
-5. 3D LiDAR: sparse voxelized representation & generalization of ICP
-
-6. LOAM(LiDAR Odometry And Mapping):
-
-    focus on edges and planar features in the 2D LiDAR sweep
-    
-    match in a map for edge-line and planar-planar surfcae matching
 
 ***
 
