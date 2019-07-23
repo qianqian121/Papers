@@ -166,6 +166,8 @@ Estimate the seonsor motion between two consecutive scans.
     
     2. Integrate pose-graph SLAM into LeGO-LOAM
 
+<br/>
+
 ***
 
 <br/>
@@ -197,9 +199,9 @@ Compare **the translational and rotational difference** between the final and in
 
 * **LOAM**'s pose estimation diverges : 
 
-(1) no edge features are extracted from ground covered by grass
+    (1) no edge features are extracted from ground covered by grass
 
-(2) noisy sensor readings from grass and trees -> unreliable feature extraction
+    (2) noisy sensor readings from grass and trees -> unreliable feature extraction
 
 ![fig7](https://user-images.githubusercontent.com/42059549/61676852-5f4a7600-ad38-11e9-898c-787ef809cd69.JPG)
 
