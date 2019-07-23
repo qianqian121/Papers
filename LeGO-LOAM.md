@@ -101,6 +101,7 @@ Perform **fast** and **reliable** feature extraction
 ### 2. Feature extraction
 
 **Extract** features from **ground points** and **segmented points**.
+
 * *S* : the set of continuous points of *p_i* from the same row of the range image
 
 (Half of the points in *S* : on either side of *p_i* )
@@ -115,242 +116,74 @@ Perform **fast** and **reliable** feature extraction
 
 ***c* < *c_th*** : **planar** feature -> **F_p**: the set of all planar features from all sub-images
 
+(*c_th* can be changed to reduce the number of features and filter out unstable features)
+
 <br/>
 <br/>
 
 ### 3. LiDAR odometry
 
-- Estimate the seonsor motion between two consecutive scans.
+Estimate the seonsor motion between two consecutive scans.
 
 * Transformation between two scans: performing **point-to-edge**, **point-to-plane** scan-matching
 
 = Find the corresponding features in ***F_e(t)*** and ***F_p(t)*** from feature sets **F_e(t-1)** and **F_p(t-1)** of **the previous scan**
 
 
-* **Process**
+* **Improvement** in feature matching accuracy and efficiency
 
-1. Estimate the discrete position *˜τ(t_k)*
+1. **Label Matching**
 
-> -> Use **only** previous odometry: *˜τ(t_k) = τ(t_k−1) ∗ τ(t_k−2)^(-1) ∗ τ(t_k−1)*
+    Since each feature in *F_e(t)* and *F_p(t)* is encoded with its label after segmentation, we **only find correspondences** that have the same label
 
-<br/>
-
-2. Build the point cloud scan *S_k*
-
-> -> Use a linear interpolation of positions between *τ(t_k−1)* and *˜τ(t_k)* 
+    -> It helps **improve the matching accuracy**
     
->> ***Good** egomotion approximation*: when the angular and linear velocities of the LiDAR are *smooth and continuous*.
+<br/>    
 
-<br/>
+2. **Two-step L-M optimization**
 
-3. Remove all dynamic objects from the scan.
+    (**The Levenberg-Marquardt(L-M) method**: applied to find the **minimum-distance transformation** between the two consecutive scans)
 
-> -> Requires a high level of semantic information
-        
->> 1. *Detect* *the ground points* in the scan using a voxel growing.
+    A series of nonlinear expressions for the distance -> **single** comprehensive distance vector
+
+    1. Estimate [*t_z, theta_roll, theta_pitch*] : match the planar features
+
+    2. Estimate remaining [*t_x, t_y, theta_yaw*] : match the edge features
     
->> 2. *Remove* *these ground points*.
+    ∴ **6D transformation** between two consecutive scans : by fusing [*t_z, theta_roll, theta_pitch*] and [*t_x, t_y, theta_yaw*].
+
+<br/>
+
+3. **LiDAR Mapping**
+
+**Match features** in {F_e(t), F_p(t)} to a surrounding point cloud map Q(t-1) to further refine the pose transformation
+
+**the L-M method** is used here again to obtain the final transformation
+
+* **Main difference** in LeGO-LOAM: how the final point cloud map is stored -> save each individual feature set {F_e(t), F_p(t)}
+
+    1. Choose the feature sets in the field of view of the sensor
     
->> 3. *Cluster* *the remaining points* with a distance to the nearest point less than 0.5 m.
-    
->> 4. *Discard* from *the scan small group of points* instead of dynamic objects. (*small objects*: represent *pedestrians, cars, buses, or trucks*)
-    
->>> -> *discard all of small objects* from the scene assuming that they could be dynamic objects.
-        
->> 5. *Remove* *groups of points* whose bounding box is less than 14 m from a vehicle frame.
-
->> 6. *Add back* the ground points to the scan point cloud.
-
-<br/>
-
-4. Do a rigid registration of that poind cloud scan to our map: to find *τ(t_k)*
-
-(*NOTE*: 
-
-*Registration*: the alignment of two measurement through some transformation -> *Not* necessary *relative sensor pose* in all applications
-
-*SLAM*: find the sensors motion through a scene, and map the scene at the same time)
-
-<br/>
-    
-### 2. Scan Sampling Strategy
-
-Keep *the axes of the vehicle frame* instead of using principal axes of the point cloud from the covariance matrix
-
-Define the LiDAR scan point cloud in the vehicle frame with axes(*(X_v, Y_v, Z_v)*)
-
-> -> Most of the planar areas are aligned to *(X_v, Y_v, Z_v)*
-
-<br/>
-
-* **Process**
-
-1. Compute *the normal* at every point
-
-> -> For every point, keep the planar scalar(*a_2D*) of its neighborhood
-
-<br/>
-
-2. Compute the *nine values* for every point *x_i* in the scan cloud *S_k*
-
-    six values: the observability of the different unknown angles(*roll, pitch, yaw*) of the vehicle 
-
-    last three values: observability of the unknown translations
-
-(*Not* mandatory in our method to have planar zones, but it *improves* the quality of matching)
-
-<br/>
-
-![nine_values](https://user-images.githubusercontent.com/42059549/61431454-808e1980-a968-11e9-8670-9ee8288edde5.JPG)
-
-<br/>
-
-3. Sort the nine lists in descending order: first points of every list = more observability related to the unknown parameters.
-
-<br/>
-
-4. Select from each list starting from the beginning of the list.
-
-<br/>
-
-5. Find *the closest point* *p_c* of *x* in the model cloud until we find *s* samples from each list.
-
-<br/>
-
-![fig2](https://user-images.githubusercontent.com/42059549/61431494-a0254200-a968-11e9-9085-78950431212b.JPG)
-
-<br/>
-    
-### 3. Scan-To-Model Matching with Implicit Moving Least Squares (IMLS) Surface representation
-
-Implicit surface: defined by a Truncated Signed Distance Function (TSDF) 
-
-> -> problem: the surface is defined by a voxel grid(empty, SDF, unknown), usable only in a small volume space
-
-Performance of results: "scan-to-model matching" > "classical scan-to-scan matching"
-
-<br/>
-
-* **Process**
-
-1. *MLS(Moving Least Square) surface*: generates as smooth surface from a raw noisy point cloud.
-
-<br/>
-
-2. Define *IMLS surface* *I(x)*: *behaves as a distance function* close to the surface.
-
-> -> Weights *W_i(x)*: *decreases* quickly when points are far from *x*.
-
-<br/>
-
-![equation1](https://user-images.githubusercontent.com/42059549/61431552-cb0f9600-a968-11e9-94d5-30f88465824a.JPG)
-
-<br/>
-
-3. Define our point cloud map *P_k* as the accumulation of *n* previous localized scans.
-
-<br/>
-
-4. Localize the current scan *S_k* in point cloud *P_k*.
-
-> -> *Find the transformation* *R* and *t* that *minimizes* the sum of squared IMLS distances
-
-> -> Due to *exponential weights*, we can**not** approximate that nonlinear least-square optimization problem by *linear least-square*
-    
-<br/>
-
-5. Have a point cloud *Y_k*, the set of projected points *y_j*.
-
-<br/>
-
-6. Look for *the transformation* *R* and *t* that minimizes the sum. (*assumption*: small angle like ICP)
- 
-<br/>
-
-7. *Iterate* until a maximum number of iterations has been made.
-
-<br/>
-
-8. Get *final transformation*: composed of the transformation *between the first and alst iteration of the scan*.
-
-<br/>
-
-9. Compute *he new point cloud* from raw data of the currenet scan
-
-<br/>
-
-10. Compute *linear interpolation* of vehicle position between *τ(t_k-1)* and *τ(t_k)*.
-
-<br/>
-
-![fig3](https://user-images.githubusercontent.com/42059549/61431602-f72b1700-a968-11e9-8255-840df6128886.JPG)
+    2. Integrate pose-graph SLAM into LeGO-LOAM
 
 ***
 
 <br/>
+<br/>
 
-## Experiments and Results
+### 4. Experiments & results
+
+1. **Feature extraction**
+
+The number of **unstable features** from LeGO-LOAM is **reduced** greatly after point cloud segmentation.
+
+![fig4](https://user-images.githubusercontent.com/42059549/61676369-9750b980-ad36-11e9-9b0f-972546cc1397.JPG)
 
 <br/>
 
-### Comparison of classical ICP scan matching and IMLS scan-to-model framework
+2. LiDAR mapping
 
-* Advantage: *move* the scan converge towards the implicit surface, *improve* the quality of matching
+Due to **erroneous feature associations** caused by unstable features, the map from LOAM **diverges** twice during operation.
 
-<br/>
+![fig5](https://user-images.githubusercontent.com/42059549/61676421-cff09300-ad36-11e9-99d5-d6c8e880d50a.JPG)
 
-### Environment
-
-* Implemented in **C++** using only the **FLANN** library(for nearest neighbor research with k-d tree) and **Eigen**
-
-* **Velodyne HDL32, Velodyne HDL64** are used to test on a real outdoor dataset with **10 Hz**
-
-* **one CPU core** at **4 GHz**, uses **less than 1 Go of RAM**
-
-* **Sampling points** in each list: *s* = 100
-
-* *h* = 0.06 m for the IMLS surface definition
-
-* *r* = 0.20 m : maximum distance for neighbors search
-
-* **The number of matching iterataions**: 20 (keep a constant timing process)
-
-* **The number of scans we have in the model point cloud**: *n* = 100
-
-<br/>
-
-### Results
-
-The paper measures *the distance* between the first and last localized scan as an error metric.
-
-<br/>
-
-* **Comparison with IMLS-SLAM and ICP**
-
-<br/>
-
-![fig1](https://user-images.githubusercontent.com/42059549/61431317-08275880-a968-11e9-8ddb-37e1b2761167.JPG)
-
-Fig1: The good superposition of the two loops with IMLS-SLAM
-
-<br/>
-
-* **Small portion of the point cloud generated from the SLAM**
-
-<br/>
-
-![fig4](https://user-images.githubusercontent.com/42059549/61432122-635a4a80-a96a-11e9-8798-c0bbaff9aa4d.JPG)
-
-Fig4: Good egomotion of the vehicle during each scan
-
-The distance error between the first and last scan with IMLS SLAM: 16 m (a drift of only 0.40%)
-
-<br/>
-
-* **Comparision with IMLS-SLAM and LOAM in the KITTI dataset**
-
-<br/>
-
-![table1](https://user-images.githubusercontent.com/42059549/61432227-ae745d80-a96a-11e9-860a-484f73b65026.JPG)
-
-Table1: IMLS-SLAM has better performance than LOAM 
