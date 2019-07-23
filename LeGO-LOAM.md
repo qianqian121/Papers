@@ -101,22 +101,30 @@ Perform **fast** and **reliable** feature extraction
 ### 2. Feature extraction
 
 **Extract** features from **ground points** and **segmented points**.
-
-<br/>
-<br/>
-
 * *S* : the set of continuous points of *p_i* from the same row of the range image
 
 (Half of the points in *S* : on either side of *p_i* )
 
 * **Evaluate** the **roughness** of point *p_i* in *S*
 
-> ![eq1](https://user-images.githubusercontent.com/42059549/61608278-0e317800-ac8d-11e9-9bd4-be95c16ceeaa.JPG)
+**Roughness** : Calculation of **curvature** from *S*(the set of continuous points) 
 
+![eq1](https://user-images.githubusercontent.com/42059549/61608278-0e317800-ac8d-11e9-9bd4-be95c16ceeaa.JPG)
 
+***c* > *c_th*** : **edge** feature -> **F_e**: the set of all edge features from all sub-images
 
+***c* < *c_th*** : **planar** feature -> **F_p**: the set of all planar features from all sub-images
 
+<br/>
+<br/>
 
+### 3. LiDAR odometry
+
+- Estimate the seonsor motion between two consecutive scans.
+
+* Transformation between two scans: performing **point-to-edge**, **point-to-plane** scan-matching
+
+= Find the corresponding features in ***F_e(t)*** and ***F_p(t)*** from feature sets **F_e(t-1)** and **F_p(t-1)** of **the previous scan**
 
 
 * **Process**
