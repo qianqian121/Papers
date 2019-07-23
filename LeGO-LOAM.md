@@ -158,7 +158,7 @@ Estimate the seonsor motion between two consecutive scans.
 
 **Match features** in {F_e(t), F_p(t)} to a surrounding point cloud map Q(t-1) to further refine the pose transformation
 
-**the L-M method** is used here again to obtain the final transformation
+**The L-M method** is used here again to obtain the final transformation
 
 * **Main difference** in LeGO-LOAM: how the final point cloud map is stored -> save each individual feature set {F_e(t), F_p(t)}
 
