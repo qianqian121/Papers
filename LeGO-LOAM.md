@@ -181,9 +181,26 @@ The number of **unstable features** from LeGO-LOAM is **reduced** greatly after 
 
 <br/>
 
-2. LiDAR mapping
+2. **LiDAR mapping**
 
 Due to **erroneous feature associations** caused by unstable features, the map from LOAM **diverges** twice during operation.
 
 ![fig5](https://user-images.githubusercontent.com/42059549/61676421-cff09300-ad36-11e9-99d5-d6c8e880d50a.JPG)
+
+<br/>
+
+3. **Pose estimation accuracy**
+
+Compare **the translational and rotational difference** between the final and initial pose
+
+* **Similar** low-drift pose estimation: LOAM, LeGO-LOAM
+
+* **LOAM**'s pose estimation diverges : 
+
+(1) no edge features are extracted from ground covered by grass
+
+(2) noisy sensor readings from grass and trees -> unreliable feature extraction
+
+![fig7](https://user-images.githubusercontent.com/42059549/61676852-5f4a7600-ad38-11e9-898c-787ef809cd69.JPG)
+
 
