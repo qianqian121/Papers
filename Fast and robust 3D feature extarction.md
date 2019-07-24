@@ -91,3 +91,50 @@ Difficult to **match 3D point clouds** due to the **sparse and non-uniform** poi
 
 * **key issue**: determining the **size of the region** over which a normal is computed.
 
+    Within a sphere or radius *r* centered on the query point **p_i**
+    
+![dsf](https://user-images.githubusercontent.com/42059549/61769142-45865d00-ae24-11e9-939f-e7f154780e11.JPG)
+    
+![dsf](https://user-images.githubusercontent.com/42059549/61775407-dadd1d80-ae33-11e9-9edf-cbb6c8ac8c4a.JPG)    
+    
+<br/>    
+
+### 4. Segmentation and 3D feature extraction
+
+* **General idea**
+
+    1. **Compute clusters, or segments**, belonging to well defined objects in the scene.
+    
+    > (**CAUTION**: the order of cluster processing: fit **a line** -> (if fitting **fails**) -> try **a plane**)
+    
+    2. For each cluster, **perform 3D line/plane data fitting**.
+    
+    3. **Determine** if a cluster is well approximated with a line or a plane feature by computing a measure of **the quality of the fitting**.
+    
+    - **Criteria** to discriminate neighboring points to the current cluster: **point distance** and **the angle difference of the normals.**
+    
+    ![dsf](https://user-images.githubusercontent.com/42059549/61776303-b7b36d80-ae35-11e9-835a-1f98e20d4c03.JPG)
+    
+    - **Remove** the clusters containing **smaller number** of points than **threshold**.
+    
+* **After segmentation**
+
+    1. **Check** which of them can be approximated by a line or a plane.
+    
+    - **Fit** the segment with a 3D line or a 3D plane
+    
+    - Given a cluster, **compute** the **covariance matrix of the Gaussian distribution** of all the points in cluster.
+    
+        1. line: two eigenvalues < third eigenvalue
+        
+        2. plane: one eigenvalue < other eigenvalues
+        
+    2. **The residual error *e*** must be **small** if the feature model approximates well.
+    
+    ![dsf](https://user-images.githubusercontent.com/42059549/61777998-ea129a00-ae38-11e9-9f5d-03da4eeacfca.JPG)
+    
+    3. **Paper's method**: checks **both** at **the shape of the eigenvectors** and **the value of the residual error**.
+    
+    4. More formally, **one more constraints** for valid features(lines, planes)
+    
+    ![dsf](https://user-images.githubusercontent.com/42059549/61778671-22ff3e80-ae3a-11e9-8fd6-f674db2a0cd9.JPG) ![dsf](https://user-images.githubusercontent.com/42059549/61778704-33171e00-ae3a-11e9-8ee9-9ed28de428e8.JPG)
