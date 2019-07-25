@@ -138,3 +138,29 @@ Difficult to **match 3D point clouds** due to the **sparse and non-uniform** poi
     4. More formally, **one more constraints** for valid features(lines, planes)
     
     ![dsf](https://user-images.githubusercontent.com/42059549/61778671-22ff3e80-ae3a-11e9-8fd6-f674db2a0cd9.JPG) ![dsf](https://user-images.githubusercontent.com/42059549/61778704-33171e00-ae3a-11e9-8ee9-9ed28de428e8.JPG)
+    
+    ![캡처](https://user-images.githubusercontent.com/42059549/61845034-9a85aa00-aedc-11e9-912d-389d03ad1bff.JPG)
+    
+<br/>
+
+***
+
+<br/>
+
+### 5. Experiments
+
+As soon as **new 3D features** are computed, the SLAM system incrementally construct **a graph**.
+
+**Each incoming feature** can generate either a new factor, or a new node, depending if we can associate it to an existing landmark or not.
+
+![캡처](https://user-images.githubusercontent.com/42059549/61845627-0f59e380-aedf-11e9-94f6-9ef23d64290e.JPG)
+
+* Time Complexity
+
+![캡처](https://user-images.githubusercontent.com/42059549/61845686-4b8d4400-aedf-11e9-9ba0-9f096f029494.JPG) 
+
+>> ![캡처](https://user-images.githubusercontent.com/42059549/61846228-47622600-aee1-11e9-909f-0781e435ed89.JPG)
+
+
+
+
